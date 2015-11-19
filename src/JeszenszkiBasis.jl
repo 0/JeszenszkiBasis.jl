@@ -22,7 +22,12 @@ immutable Szbasis
     vectors::Array{Int, 2}
 end
 
-function Szbasis(K, N)
+function Szbasis(K::Int, N::Int)
+    # At least 1 site.
+    K >= 1 || throw(DomainError())
+    # At least 1 particle.
+    N >= 1 || throw(DomainError())
+
     # Basis size.
     D = num_vectors(N, K)
 

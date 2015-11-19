@@ -24,3 +24,6 @@ for (K, N, D) in [(1, 1, 1), (2, 3, 4), (3, 2, 6), (4, 4, 35)]
         @test i == serial_num(sb, sb.vectors[:, i])
     end
 end
+
+@test_throws DomainError Szbasis(0, 5)
+@test_throws DomainError Szbasis(5, 0)
