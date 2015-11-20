@@ -17,8 +17,10 @@ using JeszenszkiBasis
 ```julia
 ### 2 sites, 3 particles
 basis = Szbasis(2, 3)
-println(join([join(basis.vectors[:, i], " ") for i=1:basis.D], ", "))
+println(join([join(v, " ") for v in basis], ", "))
 #-> 3 0, 2 1, 1 2, 0 3
+println(length(basis))
+#-> 4
 ```
 
 ```julia
@@ -27,11 +29,18 @@ basis = Szbasis(4, 4)
 v = basis.vectors[:, 8]
 println(join(v, " "))
 #-> 1 2 1 0
+println(v in basis)
+#-> true
 println(serial_num(basis, v))
 #-> 8
 println(sub_serial_num(basis, v[1:2]))
 #-> 9
 ```
+
+
+## Caveats
+
+* Iteration reuses the same vector for each step.
 
 
 ## Acknowledgements

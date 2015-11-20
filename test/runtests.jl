@@ -12,6 +12,7 @@ for (K, N, D) in [(1, 1, 1), (2, 3, 4), (3, 2, 6), (4, 4, 35)]
     @test sb.D == D
     @test num_vectors(N, K) == D
     @test size(sb.vectors) == (sb.K, sb.D)
+    @test length(sb) == D
 
     # Occupations are correct.
     @test all(sum(sb.vectors, 1) .== N)
@@ -19,10 +20,18 @@ for (K, N, D) in [(1, 1, 1), (2, 3, 4), (3, 2, 6), (4, 4, 35)]
     # Each vector is unique.
     @test sb.vectors == unique(sb.vectors, 2)
 
-    # Serial numbers match up.
-    for i=1:sb.D
-        @test i == serial_num(sb, sb.vectors[:, i])
+    # Iteration works, serial numbers match up.
+    for (i, v) in enumerate(sb)
+        @test v in sb
+        @test v == sb.vectors[:, i]
+        @test i == serial_num(sb, v)
     end
+
+    # Invalid vectors.
+    v = zeros(Int, K)
+    @test !(v in sb)
+    v[1] = N+1
+    @test !(v in sb)
 end
 
 @test_throws DomainError Szbasis(0, 5)
@@ -36,11 +45,11 @@ let sb = Szbasis(3, 2)
     left = []
     right = []
 
-    for i=1:sb.D
+    for v in sb
         # Try range indexing.
-        push!(left, sub_serial_num(sb, sb.vectors[1:2, i]))
+        push!(left, sub_serial_num(sb, v[1:2]))
         # Try a SubArray.
-        push!(right, sub_serial_num(sb, sub(sb.vectors, 3:3, i)))
+        push!(right, sub_serial_num(sb, sub(v, 3:3)))
     end
 
     @test sort(left) == [1, 2, 3, 4, 5, 6]

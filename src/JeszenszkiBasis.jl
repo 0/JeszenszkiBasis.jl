@@ -6,7 +6,9 @@ export
     serial_num,
     sub_serial_num
 
+
 num_vectors(N, K) = binomial(N+K-1, K-1)
+
 
 """
 Basis of occupation vectors for K sites and N particles.
@@ -55,6 +57,38 @@ function Szbasis(K::Int, N::Int)
 
     Szbasis(K, N, D, vectors)
 end
+
+
+type SzbasisIterState
+    i::Int
+    v::Array{Int, 1}
+end
+
+function Base.start(basis::Szbasis)
+    SzbasisIterState(0, Array(Int, basis.K))
+end
+
+function Base.next(basis::Szbasis, state::SzbasisIterState)
+    state.i += 1
+
+    for j=1:basis.K
+        state.v[j] = basis.vectors[j, state.i]
+    end
+
+    state.v, state
+end
+
+function Base.done(basis::Szbasis, state::SzbasisIterState)
+    state.i == basis.D
+end
+
+Base.eltype(::Type{Szbasis}) = Array{Int, 1}
+Base.length(basis::Szbasis) = basis.D
+
+function Base.in(v::AbstractArray{Int, 1}, basis::Szbasis)
+    length(v) == basis.K && sum(v) == basis.N
+end
+
 
 """
 Deterimine the serial number of an occupation vector.
