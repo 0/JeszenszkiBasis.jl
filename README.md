@@ -29,6 +29,8 @@ println(join(v, " "))
 #-> 1 2 1 0
 println(serial_num(basis, v))
 #-> 8
+println(sub_serial_num(basis, v[1:2]))
+#-> 9
 ```
 
 

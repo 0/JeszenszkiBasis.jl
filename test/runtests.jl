@@ -27,3 +27,22 @@ end
 
 @test_throws DomainError Szbasis(0, 5)
 @test_throws DomainError Szbasis(5, 0)
+
+
+### sub_serial_num
+
+let sb = Szbasis(3, 2)
+    # Split each vector into 2 sites on the left and 1 on the right.
+    left = []
+    right = []
+
+    for i=1:sb.D
+        # Try range indexing.
+        push!(left, sub_serial_num(sb, sb.vectors[1:2, i]))
+        # Try a SubArray.
+        push!(right, sub_serial_num(sb, sub(sb.vectors, 3:3, i)))
+    end
+
+    @test sort(left) == [1, 2, 3, 4, 5, 6]
+    @test sort(right) == [1, 1, 1, 2, 2, 3]
+end

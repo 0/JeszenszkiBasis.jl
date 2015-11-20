@@ -3,7 +3,8 @@ module JeszenszkiBasis
 export
     Szbasis,
     num_vectors,
-    serial_num
+    serial_num,
+    sub_serial_num
 
 num_vectors(N, K) = binomial(N+K-1, K-1)
 
@@ -58,20 +59,45 @@ end
 """
 Deterimine the serial number of an occupation vector.
 """
-function serial_num(basis::Szbasis, v::Array{Int, 1})
+function serial_num(K::Int, N::Int, v::AbstractArray{Int, 1})
     I = 1
 
-    for mu=1:basis.K
+    for mu=1:K
         s = 0
-        for nu=mu+1:basis.K
+        for nu=mu+1:K
             s += v[nu]
         end
         for i=0:v[mu]-1
-            I += num_vectors(basis.N-s-i, mu-1)
+            I += num_vectors(N-s-i, mu-1)
         end
     end
 
     I
+end
+
+serial_num(basis::Szbasis, v::AbstractArray{Int, 1}) = serial_num(basis.K, basis.N, v)
+
+"""
+Determine the serial number of a reduced occupation vector (containing a subset
+of the sites).
+"""
+function sub_serial_num(::Szbasis, v::AbstractArray{Int, 1})
+    K = length(v)
+    N = sum(v)
+
+    # Only one way to have no sites.
+    K >= 1 || return 1
+    # Only one way to have no particles.
+    N >= 1 || return 1
+
+    # Count the zero-particle case.
+    I = 1
+
+    for n=1:N-1
+        I += num_vectors(n, K)
+    end
+
+    I + serial_num(K, N, v)
 end
 
 end
