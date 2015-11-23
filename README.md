@@ -29,12 +29,21 @@ basis = Szbasis(4, 4)
 v = basis.vectors[:, 8]
 println(join(v, " "))
 #-> 1 2 1 0
-println(v in basis)
-#-> true
 println(serial_num(basis, v))
 #-> 8
 println(sub_serial_num(basis, v[1:2]))
 #-> 9
+```
+
+```julia
+### 3 sites, 3 particles, 2 maximum
+basis = RestrictedSzbasis(3, 3, 2)
+println(join([join(v, " ") for v in basis], ", "))
+#-> 2 1 0, 1 2 0, 2 0 1, 1 1 1, 0 2 1, 1 0 2, 0 1 2
+println([2, 1, 0] in basis)
+#-> true
+println([3, 0, 0] in basis)
+#-> false
 ```
 
 
