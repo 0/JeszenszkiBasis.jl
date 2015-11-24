@@ -49,7 +49,13 @@ println([3, 0, 0] in basis)
 
 ## Caveats
 
-* Iteration reuses the same vector for each step.
+* Iteration reuses the same vector for each step:
+
+  ```julia
+  basis = Szbasis(2, 1)
+  println(join([v for v in basis], ", "))
+  #-> [0,1], [0,1]
+  ```
 
 
 ## Acknowledgements
