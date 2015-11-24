@@ -13,15 +13,40 @@ export
 
 num_vectors(N, K) = binomial(N+K-1, K-1)
 
+# Global cache of generalized Pascal's triangles for restricted num_vectors.
+const triangles = Dict{Int, Array{Int, 2}}()
+
 function num_vectors(N, K, M)
     0 <= N <= M * K || return 0
     N == K == 0 && return 1
 
-    result = 0
-    for L=N-M:N
-        result += num_vectors(L, K-1, M)
+    # Create a new triangle.
+    if !haskey(triangles, M)
+        triangles[M] = zeros(Int, 1, 1)
+        triangles[M][1, 1] = 1
     end
-    result
+
+    # Extend an existing triangle.
+    if size(triangles[M], 1) < K + 1
+        t_old = triangles[M]
+        K_old = size(t_old, 1) - 1
+        t = zeros(Int, K+1, M*K+1)
+        for k=0:K_old
+            for n=0:M*k
+                t[k+1, n+1] = t_old[k+1, n+1]
+            end
+        end
+        for k=K_old+1:K
+            for n=0:M*k
+                for m=0:min(M, n)
+                    t[k+1, n+1] += t[k, n+1-m]
+                end
+            end
+        end
+        triangles[M] = t
+    end
+
+    triangles[M][K+1, N+1]
 end
 
 
