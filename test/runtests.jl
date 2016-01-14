@@ -22,11 +22,14 @@ for (K, N, D) in [(50, 0, 1), (1, 1, 1), (2, 3, 4), (3, 2, 6), (4, 4, 35)]
     @test sb.vectors == unique(sb.vectors, 2)
 
     # Iteration works, serial numbers match up.
+    d = 0
     for (i, v) in enumerate(sb)
         @test v in sb
         @test v == sb.vectors[:, i]
         @test i == serial_num(sb, v)
+        d += 1
     end
+    @test d == D
 
     # Invalid vectors.
     v = zeros(Int, K)
@@ -67,11 +70,14 @@ for (K, N, M, D) in [(50, 0, 0, 1), (1, 1, 1, 1), (2, 3, 2, 2), (3, 2, 1, 3), (4
     @test sb.vectors == unique(sb.vectors, 2)
 
     # Iteration works, serial numbers match up.
+    d = 0
     for (i, v) in enumerate(sb)
         @test v in sb
         @test v == sb.vectors[:, i]
         @test i == serial_num(sb, v)
+        d += 1
     end
+    @test d == D
 
     # Invalid vectors.
     v = zeros(Int, K)
