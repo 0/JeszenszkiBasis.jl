@@ -31,8 +31,10 @@ for (K, N, D) in [(1, 1, 1), (2, 3, 4), (3, 2, 6), (4, 4, 35)]
     # Invalid vectors.
     v = zeros(Int, K)
     @test !(v in sb)
-    v[1] = N+1
-    @test !(v in sb)
+    for n in [-1, N+1]
+        v[1] = n
+        @test !(v in sb)
+    end
 end
 
 @test_throws DomainError Szbasis(0, 5)
@@ -70,10 +72,10 @@ for (K, N, M, D) in [(1, 1, 1, 1), (2, 3, 2, 2), (3, 2, 1, 3), (4, 4, 2, 19)]
     # Invalid vectors.
     v = zeros(Int, K)
     @test !(v in sb)
-    v[1] = N+1
-    @test !(v in sb)
-    v[1] = M+1
-    @test !(v in sb)
+    for n in [-1, N+1, M+1]
+        v[1] = n
+        @test !(v in sb)
+    end
 end
 
 @test_throws DomainError RestrictedSzbasis(2, 5, 2)
