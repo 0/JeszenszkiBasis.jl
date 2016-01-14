@@ -3,7 +3,7 @@ using Base.Test
 
 ### Szbasis, num_vectors, site_max, serial_num
 
-for (K, N, D) in [(1, 1, 1), (2, 3, 4), (3, 2, 6), (4, 4, 35)]
+for (K, N, D) in [(50, 0, 1), (1, 1, 1), (2, 3, 4), (3, 2, 6), (4, 4, 35)]
     sb = Szbasis(K, N)
 
     # Numbers are correct.
@@ -30,7 +30,11 @@ for (K, N, D) in [(1, 1, 1), (2, 3, 4), (3, 2, 6), (4, 4, 35)]
 
     # Invalid vectors.
     v = zeros(Int, K)
-    @test !(v in sb)
+    if N > 0
+        @test !(v in sb)
+    else
+        @test v in sb
+    end
     for n in [-1, N+1]
         v[1] = n
         @test !(v in sb)
@@ -38,12 +42,12 @@ for (K, N, D) in [(1, 1, 1), (2, 3, 4), (3, 2, 6), (4, 4, 35)]
 end
 
 @test_throws DomainError Szbasis(0, 5)
-@test_throws DomainError Szbasis(5, 0)
+@test_throws DomainError Szbasis(5, -1)
 
 
 ### RestrictedSzbasis
 
-for (K, N, M, D) in [(1, 1, 1, 1), (2, 3, 2, 2), (3, 2, 1, 3), (4, 4, 2, 19)]
+for (K, N, M, D) in [(50, 0, 0, 1), (1, 1, 1, 1), (2, 3, 2, 2), (3, 2, 1, 3), (4, 4, 2, 19)]
     sb = RestrictedSzbasis(K, N, M)
 
     # Numbers are correct.
@@ -71,7 +75,11 @@ for (K, N, M, D) in [(1, 1, 1, 1), (2, 3, 2, 2), (3, 2, 1, 3), (4, 4, 2, 19)]
 
     # Invalid vectors.
     v = zeros(Int, K)
-    @test !(v in sb)
+    if N > 0
+        @test !(v in sb)
+    else
+        @test v in sb
+    end
     for n in [-1, N+1, M+1]
         v[1] = n
         @test !(v in sb)

@@ -19,8 +19,8 @@ end
 function Szbasis(K::Int, N::Int)
     # At least 1 site.
     K >= 1 || throw(DomainError())
-    # At least 1 particle.
-    N >= 1 || throw(DomainError())
+    # At least 0 particles.
+    N >= 0 || throw(DomainError())
 
     # Basis size.
     D = num_vectors(N, K)
@@ -71,20 +71,21 @@ end
 function RestrictedSzbasis(K::Int, N::Int, M::Int)
     # At least 1 site.
     K >= 1 || throw(DomainError())
-    # At least 1 particle.
-    N >= 1 || throw(DomainError())
+    # At least 0 particles.
+    N >= 0 || throw(DomainError())
     # No more than can fit.
     N <= K * M || throw(DomainError())
 
     # Basis size.
     D = num_vectors(N, K, M)
+    dNM = M > 0 ? div(N, M) : 1
 
     v = zeros(Int, K)
-    for j=1:div(N, M)
+    for j=1:dNM
         v[j] = M
     end
-    if 1 <= div(N, M) + 1 <= K
-        v[div(N, M)+1] = N - M * div(N, M)
+    if 1 <= dNM + 1 <= K
+        v[dNM+1] = N - M * dNM
     end
     vectors = Array(Int, K, D)
     vectors[:, 1] = v
