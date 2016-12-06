@@ -60,6 +60,14 @@ println([3, 0, 0] in basis)
   ```
 
 
+## Testing
+
+Run all the tests:
+```
+JULIA_LOAD_PATH=src julia --color=yes test/runtests.jl
+```
+
+
 ## Acknowledgements
 
 Thanks to [Roger Melko](http://www.science.uwaterloo.ca/~rgmelko/) for getting me up to speed and providing a reference implementation!
