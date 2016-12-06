@@ -106,7 +106,7 @@ let sb = Szbasis(3, 2)
         # Try range indexing.
         push!(left, sub_serial_num(sb, v[1:2]))
         # Try a SubArray.
-        push!(right, sub_serial_num(sb, sub(v, 3:3)))
+        push!(right, sub_serial_num(sb, view(v, 3:3)))
     end
 
     @test sort(left) == [1, 2, 3, 4, 5, 6]
@@ -122,7 +122,7 @@ let sb = RestrictedSzbasis(5, 2, 2)
         # Try range indexing.
         push!(left, sub_serial_num(sb, v[1:2]))
         # Try a SubArray.
-        push!(right, sub_serial_num(sb, sub(v, 3:5)))
+        push!(right, sub_serial_num(sb, view(v, 3:5)))
     end
 
     @test sort(left) == [1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 5, 6]

@@ -2,6 +2,8 @@
 
 Bosonic occupation basis using algorithms from [Szabados et al., 2012](http://dx.doi.org/10.1016/j.chemphys.2011.10.003) ([preprint](http://coulson.chem.elte.hu/surjan/PREPRINTS/181.pdf)).
 
+Tested with Julia 0.5.
+
 
 ## Installation
 
