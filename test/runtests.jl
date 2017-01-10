@@ -27,6 +27,7 @@ using Base.Test
         for (i, v) in enumerate(sb)
             @test v in sb
             @test v == sb.vectors[:, i]
+            @test v == sb[i]
             @test i == serial_num(sb, v)
             d += 1
         end
@@ -74,6 +75,7 @@ end
         for (i, v) in enumerate(sb)
             @test v in sb
             @test v == sb.vectors[:, i]
+            @test v == sb[i]
             @test i == serial_num(sb, v)
             d += 1
         end

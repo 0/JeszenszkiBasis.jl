@@ -28,7 +28,7 @@ println(length(basis))
 ```julia
 ### 4 sites, 4 particles
 basis = Szbasis(4, 4)
-v = basis.vectors[:, 8]
+v = basis[8]
 println(join(v, " "))
 #-> 1 2 1 0
 println(serial_num(basis, v))
@@ -50,6 +50,17 @@ println([3, 0, 0] in basis)
 
 
 ## Caveats
+
+* Indexing returns a view into the vector array:
+
+  ```julia
+  basis = Szbasis(2, 1)
+  println(join([join(v, " ") for v in basis], ", "))
+  #-> 1 0, 0 1
+  basis[1][1] = 11
+  println(join([join(v, " ") for v in basis], ", "))
+  #-> 11 0, 0 1
+  ```
 
 * Iteration reuses the same vector for each step:
 
