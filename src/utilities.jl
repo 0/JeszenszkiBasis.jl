@@ -1,12 +1,22 @@
+## Utilities for working with the bases.
+
 """
-Number of vectors in a basis.
+    num_vectors(N::Int, K::Int)
+
+Compute the number of vectors in a basis with `N` particles and `K` sites.
 """
-num_vectors(N, K) = binomial(N+K-1, K-1)
+num_vectors(N::Int, K::Int) = binomial(N+K-1, K-1)
 
 # Global cache of generalized Pascal's triangles for restricted num_vectors.
 const triangles = Dict{Int, Array{Int, 2}}()
 
-function num_vectors(N, K, M)
+"""
+    num_vectors(N::Int, K::Int, M::Int)
+
+Compute the number of vectors in a basis with `N` particles and `K` sites, and
+a limit of `M` particles per site.
+"""
+function num_vectors(N::Int, K::Int, M::Int)
     0 <= N <= M * K || return 0
     N == K == 0 && return 1
 
@@ -39,19 +49,30 @@ function num_vectors(N, K, M)
     triangles[M][K+1, N+1]
 end
 
-num_vectors(::Szbasis, N, K) = num_vectors(N, K)
-num_vectors(basis::RestrictedSzbasis, N, K) = num_vectors(N, K, basis.M)
+"""
+    num_vectors(basis::AbstractSzbasis, N::Int, K::Int)
+
+Compute the number of vectors in a basis with `N` particles and `K` sites, and
+a limit of as many particles per site as in `basis`.
+"""
+num_vectors(::Szbasis, N::Int, K::Int) = num_vectors(N, K)
+num_vectors(basis::RestrictedSzbasis, N::Int, K::Int) = num_vectors(N, K, basis.M)
 
 
 """
-Maximum number of particles in a site.
+    site_max(basis::AbstractSzbasis)
+
+Get the maximum number of particles on a site in `basis`.
 """
 site_max(basis::Szbasis) = basis.N
 site_max(basis::RestrictedSzbasis) = basis.M
 
 
 """
-Serial number of an occupation vector.
+    serial_num(K::Int, N::Int, v::AbstractArray{Int, 1})
+
+Compute the serial number of occupation vector `v` in a basis with `K` sites
+and `N` particles.
 """
 function serial_num(K::Int, N::Int, v::AbstractArray{Int, 1})
     I = 1
@@ -69,9 +90,12 @@ function serial_num(K::Int, N::Int, v::AbstractArray{Int, 1})
     I
 end
 
-serial_num(basis::Szbasis, v::AbstractArray{Int, 1}) = serial_num(basis.K, basis.N, v)
-serial_num(::Szbasis, K::Int, N::Int, v::AbstractArray{Int, 1}) = serial_num(K, N, v)
+"""
+    serial_num(K::Int, N::Int, M::Int, v::AbstractArray{Int, 1})
 
+Compute the serial number of occupation vector `v` in a basis with `K` sites
+and `N` particles, and a limit of `M` particles per site.
+"""
 function serial_num(K::Int, N::Int, M::Int, v::AbstractArray{Int, 1})
     I = 1
 
@@ -88,12 +112,30 @@ function serial_num(K::Int, N::Int, M::Int, v::AbstractArray{Int, 1})
     I
 end
 
+"""
+    serial_num(basis::AbstractSzbasis, v::AbstractArray{Int, 1})
+
+Compute the serial number of occupation vector `v` in `basis`.
+"""
+serial_num(basis::Szbasis, v::AbstractArray{Int, 1}) = serial_num(basis.K, basis.N, v)
 serial_num(basis::RestrictedSzbasis, v::AbstractArray{Int, 1}) = serial_num(basis.K, basis.N, basis.M, v)
+
+"""
+    serial_num(basis::AbstractSzbasis, K::Int, N::Int, v::AbstractArray{Int, 1})
+
+Compute the serial number of occupation vector `v` in a basis with `N`
+particles and `K` sites, and a limit of as many particles per site as in
+`basis`.
+"""
+serial_num(::Szbasis, K::Int, N::Int, v::AbstractArray{Int, 1}) = serial_num(K, N, v)
 serial_num(basis::RestrictedSzbasis, K::Int, N::Int, v::AbstractArray{Int, 1}) = serial_num(K, N, basis.M, v)
 
 
 """
-Serial number of a reduced occupation vector (with a subset of the sites).
+    sub_serial_num(basis::AbstractSzbasis, v::AbstractArray{Int, 1})
+
+Compute the serial number of the reduced occupation vector `v`, which has only
+a subset of the sites present in `basis`.
 """
 function sub_serial_num(::Szbasis, v::AbstractArray{Int, 1})
     K = length(v)

@@ -1,3 +1,5 @@
+## Occupation vector iteration and array properties.
+
 type SzbasisIterState
     i::Int
     v::Array{Int, 1}

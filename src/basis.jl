@@ -1,21 +1,29 @@
+## Basis data structures.
+
 abstract AbstractSzbasis
 
 
 """
-Basis of occupation vectors for K sites and N particles.
+Basis of occupation vectors.
 """
 immutable Szbasis <: AbstractSzbasis
-    # Number of sites.
+    "Number of sites."
     K::Int
-    # Number of particles.
+    "Number of particles."
     N::Int
 
-    # Number of basis vectors.
+    "Number of basis vectors."
     D::Int
-    # Occupation vectors (K by D).
+
+    "Occupation vectors (K by D)."
     vectors::Array{Int, 2}
 end
 
+"""
+    Szbasis(K::Int, N::Int)
+
+Create a basis for `K` sites and `N` particles.
+"""
 function Szbasis(K::Int, N::Int)
     # At least 1 site.
     K >= 1 || throw(DomainError())
@@ -51,23 +59,29 @@ end
 
 
 """
-Basis of occupation vectors for K sites and N particles, with no more than M
-particles per site.
+Basis of occupation vectors with a site occupation restriction.
 """
 immutable RestrictedSzbasis <: AbstractSzbasis
-    # Number of sites.
+    "Number of sites."
     K::Int
-    # Number of particles.
+    "Number of particles."
     N::Int
-    # Site capacity.
+    "Site capacity."
     M::Int
 
-    # Number of basis vectors.
+    "Number of basis vectors."
     D::Int
-    # Occupation vectors (K by D).
+
+    "Occupation vectors (K by D)."
     vectors::Array{Int, 2}
 end
 
+"""
+    RestrictedSzbasis(K::Int, N::Int, M::Int)
+
+Create a basis for `K` sites and `N` particles, with no more than `M` particles
+per site.
+"""
 function RestrictedSzbasis(K::Int, N::Int, M::Int)
     # At least 1 site.
     K >= 1 || throw(DomainError())
