@@ -16,7 +16,7 @@ immutable Szbasis <: AbstractSzbasis
     D::Int
 
     "Occupation vectors (K by D)."
-    vectors::Array{Int, 2}
+    vectors::Matrix{Int}
 end
 
 """
@@ -35,10 +35,10 @@ function Szbasis(K::Int, N::Int)
 
     v = zeros(Int, K)
     v[1] = N
-    vectors = Array(Int, K, D)
+    vectors = Matrix{Int}(K, D)
     vectors[:, 1] = v
 
-    for i=2:D
+    for i in 2:D
         if v[1] > 0
             v[1] -= 1
             v[2] += 1
@@ -49,7 +49,7 @@ function Szbasis(K::Int, N::Int)
             v[j] = 0
             v[j+1] += 1
         end
-        for j=1:K
+        for j in 1:K
             vectors[j, i] = v[j]
         end
     end
@@ -73,7 +73,7 @@ immutable RestrictedSzbasis <: AbstractSzbasis
     D::Int
 
     "Occupation vectors (K by D)."
-    vectors::Array{Int, 2}
+    vectors::Matrix{Int}
 end
 
 """
@@ -95,16 +95,16 @@ function RestrictedSzbasis(K::Int, N::Int, M::Int)
     dNM = M > 0 ? div(N, M) : 1
 
     v = zeros(Int, K)
-    for j=1:dNM
+    for j in 1:dNM
         v[j] = M
     end
-    if 1 <= dNM + 1 <= K
+    if 1 <= (dNM + 1) <= K
         v[dNM+1] = N - M * dNM
     end
-    vectors = Array(Int, K, D)
+    vectors = Matrix{Int}(K, D)
     vectors[:, 1] = v
 
-    for i=2:D
+    for i in 2:D
         if v[1] > 0
             if v[1] < M
                 delta = M - v[1]
@@ -119,19 +119,19 @@ function RestrictedSzbasis(K::Int, N::Int, M::Int)
             v[j-1] -= 1 + delta
         else
             j = findfirst(v)
-            k = j + findfirst(v[j+1:end] .< M)
+            k = j + findfirst(v[(j+1):end] .< M)
 
             v[k-j] = v[j] - 1
             v[k] += 1
-            for l=1:k-j-1
+            for l in 1:(k-j-1)
                 v[l] = M
             end
             # The indices after the first one differ from those in the paper.
-            for l=k-j+1:k-1
+            for l in (k-j+1):(k-1)
                 v[l] = 0
             end
         end
-        for j=1:K
+        for j in 1:K
             vectors[j, i] = v[j]
         end
     end

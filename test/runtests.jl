@@ -7,7 +7,6 @@ using Base.Test
     @testset for (K, N, D) in [(50, 0, 1), (1, 1, 1), (2, 3, 4), (3, 2, 6), (4, 4, 35)]
         sb = Szbasis(K, N)
 
-        # Numbers are correct.
         @test sb.K == K
         @test sb.N == N
         @test sb.D == D
@@ -54,7 +53,6 @@ end
     @testset for (K, N, M, D) in [(50, 0, 0, 1), (1, 1, 1, 1), (2, 3, 2, 2), (3, 2, 1, 3), (4, 4, 2, 19)]
         sb = RestrictedSzbasis(K, N, M)
 
-        # Numbers are correct.
         @test sb.K == K
         @test sb.N == N
         @test sb.M == M
@@ -106,7 +104,7 @@ end
         for v in sb
             # Try range indexing.
             push!(left, sub_serial_num(sb, v[1:2]))
-            # Try a SubArray.
+            # Try a view.
             push!(right, sub_serial_num(sb, view(v, 3:3)))
         end
 
@@ -122,7 +120,7 @@ end
         for v in sb
             # Try range indexing.
             push!(left, sub_serial_num(sb, v[1:2]))
-            # Try a SubArray.
+            # Try a view.
             push!(right, sub_serial_num(sb, view(v, 3:5)))
         end
 
