@@ -2,7 +2,7 @@
 
 Bosonic occupation basis using algorithms from [Szabados et al., 2012](http://dx.doi.org/10.1016/j.chemphys.2011.10.003) ([preprint](http://coulson.chem.elte.hu/surjan/PREPRINTS/181.pdf)).
 
-Tested with Julia 0.5.
+Tested with Julia 0.6.
 
 
 ## Installation
@@ -13,39 +13,39 @@ Tested with Julia 0.5.
 ## Examples
 
 ```julia
-using JeszenszkiBasis
+julia> using JeszenszkiBasis
 ```
 
+2 sites, 3 particles:
 ```julia
-### 2 sites, 3 particles
-basis = Szbasis(2, 3)
-println(join([join(v, " ") for v in basis], ", "))
-#-> 3 0, 2 1, 1 2, 0 3
-println(length(basis))
-#-> 4
+julia> basis = Szbasis(2, 3);
+julia> join([join(v, " ") for v in basis], ", ")
+"3 0, 2 1, 1 2, 0 3"
+julia> length(basis)
+4
 ```
 
+4 sites, 4 particles:
 ```julia
-### 4 sites, 4 particles
-basis = Szbasis(4, 4)
-v = basis[8]
-println(join(v, " "))
-#-> 1 2 1 0
-println(serial_num(basis, v))
-#-> 8
-println(sub_serial_num(basis, v[1:2]))
-#-> 9
+julia> basis = Szbasis(4, 4);
+julia> v = basis[8];
+julia> join(v, " ")
+"1 2 1 0"
+julia> serial_num(basis, v)
+8
+julia> sub_serial_num(basis, v[1:2])
+9
 ```
 
+3 sites, 3 particles, 2 maximum:
 ```julia
-### 3 sites, 3 particles, 2 maximum
-basis = RestrictedSzbasis(3, 3, 2)
-println(join([join(v, " ") for v in basis], ", "))
-#-> 2 1 0, 1 2 0, 2 0 1, 1 1 1, 0 2 1, 1 0 2, 0 1 2
-println([2, 1, 0] in basis)
-#-> true
-println([3, 0, 0] in basis)
-#-> false
+julia> basis = RestrictedSzbasis(3, 3, 2);
+julia> join([join(v, " ") for v in basis], ", ")
+"2 1 0, 1 2 0, 2 0 1, 1 1 1, 0 2 1, 1 0 2, 0 1 2"
+julia> [2, 1, 0] in basis
+true
+julia> [3, 0, 0] in basis
+false
 ```
 
 
@@ -54,20 +54,12 @@ println([3, 0, 0] in basis)
 * Indexing returns a view into the vector array:
 
   ```julia
-  basis = Szbasis(2, 1)
-  println(join([join(v, " ") for v in basis], ", "))
-  #-> 1 0, 0 1
-  basis[1][1] = 11
-  println(join([join(v, " ") for v in basis], ", "))
-  #-> 11 0, 0 1
-  ```
-
-* Iteration reuses the same vector for each step:
-
-  ```julia
-  basis = Szbasis(2, 1)
-  println(join([v for v in basis], ", "))
-  #-> [0,1], [0,1]
+  julia> basis = Szbasis(2, 1);
+  julia> join([join(v, " ") for v in basis], ", ")
+  "1 0, 0 1"
+  julia> basis[1][1] = 11;
+  julia> join([join(v, " ") for v in basis], ", ")
+  "11 0, 0 1"
   ```
 
 

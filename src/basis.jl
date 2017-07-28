@@ -1,12 +1,12 @@
 ## Basis data structures.
 
-abstract AbstractSzbasis
+abstract type AbstractSzbasis end
 
 
 """
 Basis of occupation vectors.
 """
-immutable Szbasis <: AbstractSzbasis
+struct Szbasis <: AbstractSzbasis
     "Number of sites."
     K::Int
     "Number of particles."
@@ -36,7 +36,7 @@ function Szbasis(K::Int, N::Int)
     v = zeros(Int, K)
     v[1] = N
     vectors = Matrix{Int}(K, D)
-    vectors[:, 1] = v
+    vectors[:, 1] .= v
 
     for i in 2:D
         if v[1] > 0
@@ -49,9 +49,7 @@ function Szbasis(K::Int, N::Int)
             v[j] = 0
             v[j+1] += 1
         end
-        for j in 1:K
-            vectors[j, i] = v[j]
-        end
+        vectors[:, i] .= v
     end
 
     Szbasis(K, N, D, vectors)
@@ -61,7 +59,7 @@ end
 """
 Basis of occupation vectors with a site occupation restriction.
 """
-immutable RestrictedSzbasis <: AbstractSzbasis
+struct RestrictedSzbasis <: AbstractSzbasis
     "Number of sites."
     K::Int
     "Number of particles."
@@ -102,7 +100,7 @@ function RestrictedSzbasis(K::Int, N::Int, M::Int)
         v[dNM+1] = N - M * dNM
     end
     vectors = Matrix{Int}(K, D)
-    vectors[:, 1] = v
+    vectors[:, 1] .= v
 
     for i in 2:D
         if v[1] > 0
@@ -119,7 +117,7 @@ function RestrictedSzbasis(K::Int, N::Int, M::Int)
             v[j-1] -= 1 + delta
         else
             j = findfirst(v)
-            k = j + findfirst(v[(j+1):end] .< M)
+            k = j + findfirst(@view(v[(j+1):end]) .< M)
 
             v[k-j] = v[j] - 1
             v[k] += 1
@@ -131,9 +129,7 @@ function RestrictedSzbasis(K::Int, N::Int, M::Int)
                 v[l] = 0
             end
         end
-        for j in 1:K
-            vectors[j, i] = v[j]
-        end
+        vectors[:, i] .= v
     end
 
     RestrictedSzbasis(K, N, M, D, vectors)
