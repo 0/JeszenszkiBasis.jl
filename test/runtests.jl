@@ -129,4 +129,13 @@ end
     end
 end
 
+@testset "string" begin
+    @testset for (s1, v, s2) in [(sz"", Int[], ""), (sz"0", [0], "0"), (sz"123", [123], "123"), (sz"0 0", [0, 0], "0 0"), (sz"1 23 456", [1, 23, 456], "1 23 456"), (sz"0 0 1 0", [0, 0, 1, 0], "0 0 1 0")]
+        @test s1 == v
+        @test s2 == to_str(v)
+        @test s2 == to_str(v[1:end])
+        @test s2 == to_str(@view v[1:end])
+    end
+end
+
 end
