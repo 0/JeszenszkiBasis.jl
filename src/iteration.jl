@@ -1,21 +1,8 @@
 ## Occupation vector iteration and array properties.
 
-mutable struct SzbasisIterState
-    i::Int
-end
-
-function Base.start(basis::AbstractSzbasis)
-    SzbasisIterState(0)
-end
-
-function Base.next(basis::AbstractSzbasis, state::SzbasisIterState)
-    state.i += 1
-
-    @view(basis.vectors[:, state.i]), state
-end
-
-function Base.done(basis::AbstractSzbasis, state::SzbasisIterState)
-    state.i == basis.D
+function Base.iterate(basis::AbstractSzbasis, state=1)
+    state > basis.D && return nothing
+    @view(basis.vectors[:, state]), state+1
 end
 
 Base.eltype(::Type{AbstractSzbasis}) = Vector{Int}

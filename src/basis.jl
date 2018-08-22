@@ -25,17 +25,15 @@ end
 Create a basis for `K` sites and `N` particles.
 """
 function Szbasis(K::Int, N::Int)
-    # At least 1 site.
-    K >= 1 || throw(DomainError())
-    # At least 0 particles.
-    N >= 0 || throw(DomainError())
+    K >= 1 || throw(DomainError(K, "At least 1 site is required."))
+    N >= 0 || throw(DomainError(N, "At least 0 particles are required."))
 
     # Basis size.
     D = num_vectors(N, K)
 
     v = zeros(Int, K)
     v[1] = N
-    vectors = Matrix{Int}(K, D)
+    vectors = Matrix{Int}(undef, K, D)
     vectors[:, 1] .= v
 
     for i in 2:D
@@ -43,7 +41,7 @@ function Szbasis(K::Int, N::Int)
             v[1] -= 1
             v[2] += 1
         else
-            j = findfirst(v)
+            j = findfirst(!iszero, v)
 
             v[1] = v[j] - 1
             v[j] = 0
@@ -81,12 +79,9 @@ Create a basis for `K` sites and `N` particles, with no more than `M` particles
 per site.
 """
 function RestrictedSzbasis(K::Int, N::Int, M::Int)
-    # At least 1 site.
-    K >= 1 || throw(DomainError())
-    # At least 0 particles.
-    N >= 0 || throw(DomainError())
-    # No more than can fit.
-    N <= K * M || throw(DomainError())
+    K >= 1 || throw(DomainError(K, "At least 1 site is required."))
+    N >= 0 || throw(DomainError(N, "At least 0 particles are required."))
+    N <= K * M || throw(DomainError(N, "Particles do not fit on the sites."))
 
     # Basis size.
     D = num_vectors(N, K, M)
@@ -99,7 +94,7 @@ function RestrictedSzbasis(K::Int, N::Int, M::Int)
     if 1 <= (dNM + 1) <= K
         v[dNM+1] = N - M * dNM
     end
-    vectors = Matrix{Int}(K, D)
+    vectors = Matrix{Int}(undef, K, D)
     vectors[:, 1] .= v
 
     for i in 2:D
@@ -111,13 +106,13 @@ function RestrictedSzbasis(K::Int, N::Int, M::Int)
                 delta = 0
             end
 
-            j = findfirst(v .< M)
+            j = findfirst(!iszero, v .< M)
 
             v[j] += 1
             v[j-1] -= 1 + delta
         else
-            j = findfirst(v)
-            k = j + findfirst(@view(v[(j+1):end]) .< M)
+            j = findfirst(!iszero, v)
+            k = j + findfirst(!iszero, @view(v[(j+1):end]) .< M)
 
             v[k-j] = v[j] - 1
             v[k] += 1

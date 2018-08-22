@@ -1,13 +1,15 @@
-# JeszenszkiBasis.jl
+# JeszenszkiBasis
 
 Bosonic occupation basis using algorithms from [Szabados et al., 2012](http://dx.doi.org/10.1016/j.chemphys.2011.10.003) ([preprint](http://coulson.chem.elte.hu/surjan/PREPRINTS/181.pdf)).
 
-Tested with Julia 0.6.
+Tested with Julia 1.0.
 
 
 ## Installation
 
-1. `Pkg.clone("https://github.com/0/JeszenszkiBasis.jl.git")`
+```
+pkg> add https://github.com/0/JeszenszkiBasis.jl.git
+```
 
 
 ## Examples
@@ -65,9 +67,10 @@ false
 
 ## Testing
 
-Run all the tests:
+To run all the tests, activate the package before calling `test`:
 ```
-JULIA_LOAD_PATH=src julia --color=yes test/runtests.jl
+pkg> activate .
+(JeszenszkiBasis) pkg> test
 ```
 
 

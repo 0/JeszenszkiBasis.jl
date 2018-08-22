@@ -1,5 +1,5 @@
 using JeszenszkiBasis
-using Base.Test
+using Test
 
 @testset "JeszenszkiBasis" begin
 
@@ -16,10 +16,10 @@ using Base.Test
         @test site_max(sb) == N
 
         # Occupations are correct.
-        @test all(sum(sb.vectors, 1) .== N)
+        @test all(sum(sb.vectors, dims=1) .== N)
 
         # Each vector is unique.
-        @test sb.vectors == unique(sb.vectors, 2)
+        @test sb.vectors == unique(sb.vectors, dims=2)
 
         # Iteration works, serial numbers match up.
         d = 0
@@ -63,10 +63,10 @@ end
         @test site_max(sb) == M
 
         # Occupations are correct.
-        @test all(sum(sb.vectors, 1) .== N)
+        @test all(sum(sb.vectors, dims=1) .== N)
 
         # Each vector is unique.
-        @test sb.vectors == unique(sb.vectors, 2)
+        @test sb.vectors == unique(sb.vectors, dims=2)
 
         # Iteration works, serial numbers match up.
         d = 0
