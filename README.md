@@ -8,7 +8,7 @@ Tested with Julia 1.0.
 ## Installation
 
 ```
-pkg> add https://github.com/0/JeszenszkiBasis.jl.git
+pkg> add JeszenszkiBasis
 ```
 
 
